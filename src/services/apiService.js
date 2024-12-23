@@ -1,78 +1,87 @@
 // Import the axios library for making HTTP requests
 import axios from "axios";
+//const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
 
-// Define the apiService object to combine API calls
+// Define the apiService object to organize API-related methods
 const apiService = {
   // Method to fetch onboarding data for a new user
   async fetchOnboardingData() {
     try {
-      // POST request to the onboarding endpoint with data of the new user and device ID
+      // Make a POST request to the onboarding API endpoint
       const response = await axios.post(
-        "/api/mentoassignment/assignment/onboarding/start", // API endpoint
-        { newUser: true, deviceId: "387c2863-6ee3-4a56-8210-225f774edade" }, // Data to be send with the request
+        //`${CORS_PROXY}https://4caeisr4q3.execute-api.us-east-1.amazonaws.com/dev/mentoapp/onboarding/start`, // API endpoint
+        //"https://4caeisr4q3.execute-api.us-east-1.amazonaws.com/dev/mentoapp/onboarding/start",
+        "/api/mentoassignment/assignment/onboarding/start",
         {
-          headers: {
-            "Content-Type": "application/json", // Set the content type to JSON
-          },
-        }
-      );
-      // Returns the response data from the API
-      return response.data;
-    } catch (error) {
-      // If an error occurs, catch it here and throw it
-      console.error("Error fetching onboarding data:", error); // Log the error as well
-      throw error;
-    }
-  },
-
-  // Method to fetch skill learning data for a user based on temporary userID and selecteddomain
-  async fetchSkillLearningData(tempUserId, selectedDomainId) {
-    try {
-      // POST request to fetch the skill learning data for the given user and domain
-      const response = await axios.post(
-        "/api/mentoassignment/assignment/onboarding/domains", // API endpoint
-        {
-          tempUserId: tempUserId, // Temporary userID
-          selectedDomainId: selectedDomainId, // Selecteddomain ID
+          newUser: true, // Indicates a new user
+          deviceId: "387c2863-6ee3-4a56-8210-225f774edade", // Unique device identifier
         },
         {
           headers: {
-            "Content-Type": "application/json", // Set the content type to JSON
+            //"Access-Control-Allow-Origin":"*",
+            //"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            //"Access-Control-Allow-Headers": "Content-Type",
+            "Content-Type": "application/json", // Specify that the data is in JSON format
           },
         }
       );
-      // Returns the response data from the API
+      // Return the response data received from the API
       return response.data;
     } catch (error) {
-      // If an error occurs, catch it here and throw it
-      console.error("Error fetching skill learning data:", error); // Log the error as well
+      // Log and rethrow the error if the API call fails.
+      console.error("Error fetching onboarding data:", error);
       throw error;
     }
   },
 
-  // Method to send an OTP request to the server
-  async sendOtp(data) {
+  // Method to fetch skill learning data for a user
+  async fetchSkillLearningData(tempUserId, selectedDomainId) {
     try {
-      // POST request to send OTP for user login
+      // Make a POST request to fetch skill learning data
       const response = await axios.post(
-        "/api/mentoassignment/assignment/onboarding/login", // API endpoint
-        data, // Data to be send with the request
+        "/api/mentoassignment/assignment/onboarding/domains", // API endpoint
+        {
+          tempUserId: tempUserId, // Temporary user identifier
+          selectedDomainId: selectedDomainId, // Domain selected by the user
+        },
         {
           headers: {
-            appflavour: "DEV", // Custom header for app flavor
-            "Content-Type": "application/json", // Set the content type to JSON
+            "Content-Type": "application/json", // Specify that the data is is JSON format
           },
         }
       );
-      // Returns the response from the OTP request
+      // Return the response data received from the API
+      return response.data;
+    } catch (error) {
+      // Log and rethrow the error if the API call fails.
+      console.error("Error fetching skill learning data:", error);
+      throw error;
+    }
+  },
+
+  // Method to send an OTP request
+  async sendOtp(data) {
+    try {
+      // Make a POST request to send OTP data
+      const response = await axios.post(
+        "/api/mentoassignment/assignment/onboarding/login", // API endpoint
+        data, // Payload containing OTP request details
+        {
+          headers: {
+            appflavour: "DEV", // Custom header to indicate app environment
+            "Content-Type": "application/json", // Specify that the data is in JSON format
+          },
+        }
+      );
+      // Return the entire response object
       return response;
     } catch (error) {
-      // If an error occurs, catch it and throw the error
-      console.error("Error sending OTP:", error); // Log the error as well
+      // Log and rethrow the error if the API call fails.
+      console.error("Error sending OTP:", error);
       throw error;
     }
   },
 };
 
-// Export the apiService object for the use in the application
+// Export the apiService object to make it available for use in other parts of the application
 export default apiService;
